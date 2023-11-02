@@ -1,53 +1,49 @@
-// import React, { useState, useEffect } from "react";
+// import React, { useEffect, useState } from "react";
 // import {
 //   Box,
-//   Paper,
 //   Table,
 //   TableBody,
 //   TableCell,
 //   TableContainer,
 //   TableHead,
 //   TableRow,
+//   Paper,
 //   Typography,
+//   TextField,
+//   Button,
 //   TablePagination,
 //   TableSortLabel,
-//   Button,
-//   TextField,
 // } from "@mui/material";
-// import { style } from "./SelectedApplication.css";
-// import { useNavigate, useParams } from "react-router-dom";
+// import { style } from "./Raw.css";
+// import { useNavigate } from "react-router-dom";
 
-// const SelectedApplication = () => {
-//   const [selectedApplication, setSelectedApplication] = useState([]);
+// const Raw = () => {
+//   const [raw, setRaw] = useState([]);
 //   const [page, setPage] = useState(0);
-//   const [rowsPerPage, setRowsPerPage] = useState(15);
+//   const [rowsPerPage, setRowsPerPage] = useState(30);
 //   const [orderBy, setOrderBy] = useState("");
 //   const [order, setOrder] = useState("asc");
-//   const [searchDate, setSearchDate] = useState(""); // State for search by date
-//   const { applicationId } = useParams();
 //   const navigate = useNavigate();
+//   const [searchText, setSearchText] = useState("");
 
 //   useEffect(() => {
-//     const fetchApplicationDetails = async () => {
+//     const fetchRawData = async () => {
 //       try {
 //         const response = await fetch(
-//           `https://engineering-task.elancoapps.com/api/applications/${applicationId}`
+//           "https://engineering-task.elancoapps.com/api/raw"
 //         );
 //         if (!response.ok) {
 //           throw new Error("Network response was not ok");
 //         }
 //         const data = await response.json();
-//         setSelectedApplication(data);
+//         setRaw(data);
 //       } catch (error) {
-//         console.error(
-//           "There was a problem fetching the specific application:",
-//           error
-//         );
+//         console.error("There was a problem fetching the data:", error);
 //       }
 //     };
 
-//     fetchApplicationDetails();
-//   }, [applicationId]);
+//     fetchRawData();
+//   }, []);
 
 //   const handleRequestSort = (property) => {
 //     const isAsc = orderBy === property && order === "asc";
@@ -55,8 +51,33 @@
 //     setOrderBy(property);
 //   };
 
-//   const filteredData = selectedApplication.filter((app) => {
-//     return app.Date.includes(searchDate);
+//   const sortedData = orderBy
+//     ? [...raw].sort((a, b) => {
+//         const compare = (a, b) => {
+//           if (a < b) return -1;
+//           if (a > b) return 1;
+//           return 0;
+//         };
+
+//         if (order === "asc") {
+//           return compare(a[orderBy], b[orderBy]);
+//         } else {
+//           return compare(b[orderBy], a[orderBy]);
+//         }
+//       })
+//     : raw;
+
+//   const filteredData = sortedData.filter((app) => {
+//     const searchTextLower = searchText.toLowerCase();
+//     for (const key in app) {
+//       if (
+//         app[key] &&
+//         app[key].toString().toLowerCase().includes(searchTextLower)
+//       ) {
+//         return true;
+//       }
+//     }
+//     return false;
 //   });
 
 //   const handleChangePage = (event, newPage) => {
@@ -69,19 +90,20 @@
 //   };
 
 //   const handleGoBack = () => {
-//     navigate("/applications");
+//     navigate("/");
 //   };
 
 //   return (
 //     <Box>
 //       <Typography variant="h3" sx={style.heading}>
-//         Selected Application Details
+//         All Raw Data
 //       </Typography>
 //       <TextField
 //         variant="outlined"
-//         placeholder="Search application by date"
-//         onChange={(e) => setSearchDate(e.target.value)}
+//         placeholder="Search data"
+//         onChange={(e) => setSearchText(e.target.value)}
 //         sx={style.searchField}
+//         data-testid="search-field"
 //       />
 //       <Button
 //         variant="contained"
@@ -92,11 +114,7 @@
 //         Back
 //       </Button>
 //       {filteredData.length > 0 && (
-//         <TableContainer
-//           component={Paper}
-//           sx={style.tableContainer}
-//           data-testid="table-container"
-//         >
+//         <TableContainer component={Paper} sx={style.tableContainer}>
 //           <Table>
 //             <TableHead>
 //               <TableRow>
@@ -105,6 +123,7 @@
 //                     active={orderBy === "InstanceId"}
 //                     direction={orderBy === "InstanceId" ? order : "asc"}
 //                     onClick={() => handleRequestSort("InstanceId")}
+//                     data-testid="instanceId-sort-label"
 //                   >
 //                     Instance Id
 //                   </TableSortLabel>
@@ -114,6 +133,7 @@
 //                     active={orderBy === "ConsumedQuantity"}
 //                     direction={orderBy === "ConsumedQuantity" ? order : "asc"}
 //                     onClick={() => handleRequestSort("ConsumedQuantity")}
+//                     data-testid="consumedQuantity-sort-label"
 //                   >
 //                     Consumed Quantity
 //                   </TableSortLabel>
@@ -123,6 +143,7 @@
 //                     active={orderBy === "Cost"}
 //                     direction={orderBy === "Cost" ? order : "asc"}
 //                     onClick={() => handleRequestSort("Cost")}
+//                     data-testid="cost-sort-label"
 //                   >
 //                     Cost
 //                   </TableSortLabel>
@@ -132,6 +153,7 @@
 //                     active={orderBy === "Date"}
 //                     direction={orderBy === "Date" ? order : "asc"}
 //                     onClick={() => handleRequestSort("Date")}
+//                     data-testid="date-sort-label"
 //                   >
 //                     Date
 //                   </TableSortLabel>
@@ -141,6 +163,7 @@
 //                     active={orderBy === "MeterCategory"}
 //                     direction={orderBy === "MeterCategory" ? order : "asc"}
 //                     onClick={() => handleRequestSort("MeterCategory")}
+//                     data-testid="meterCategory-sort-label"
 //                   >
 //                     Meter Category
 //                   </TableSortLabel>
@@ -150,6 +173,7 @@
 //                     active={orderBy === "ResourceGroup"}
 //                     direction={orderBy === "ResourceGroup" ? order : "asc"}
 //                     onClick={() => handleRequestSort("ResourceGroup")}
+//                     data-testid="resourceGroup-sort-label"
 //                   >
 //                     Resource Group
 //                   </TableSortLabel>
@@ -159,6 +183,7 @@
 //                     active={orderBy === "ResourceLocation"}
 //                     direction={orderBy === "ResourceLocation" ? order : "asc"}
 //                     onClick={() => handleRequestSort("ResourceLocation")}
+//                     data-testid="resourceLocation-sort-label"
 //                   >
 //                     Resource Location
 //                   </TableSortLabel>
@@ -168,6 +193,7 @@
 //                     active={orderBy === "UnitOfMeasure"}
 //                     direction={orderBy === "UnitOfMeasure" ? order : "asc"}
 //                     onClick={() => handleRequestSort("UnitOfMeasure")}
+//                     data-testid="unitOfMeasure-sort-label"
 //                   >
 //                     Unit Of Measure
 //                   </TableSortLabel>
@@ -177,6 +203,7 @@
 //                     active={orderBy === "Location"}
 //                     direction={orderBy === "Location" ? order : "asc"}
 //                     onClick={() => handleRequestSort("Location")}
+//                     data-testid="location-sort-label"
 //                   >
 //                     Location
 //                   </TableSortLabel>
@@ -186,10 +213,11 @@
 //                     active={orderBy === "ServiceName"}
 //                     direction={orderBy === "ServiceName" ? order : "asc"}
 //                     onClick={() => handleRequestSort("ServiceName")}
+//                     data-testid="serviceName-sort-label"
 //                   >
 //                     Service Name
 //                   </TableSortLabel>
-//                 </TableCell>
+//                 </TableCell>{" "}
 //               </TableRow>
 //             </TableHead>
 //             <TableBody>
@@ -200,29 +228,70 @@
 //                   )
 //                 : filteredData
 //               ).map((app, index) => (
-//                 <TableRow key={index} sx={style.tableRow}>
-//                   <TableCell sx={style.tableContent}>
+//                 <TableRow
+//                   key={index}
+//                   sx={style.tableRow}
+//                   data-testid={`table-row-${index}`}
+//                   role={`table-row-${index}`}
+//                 >
+//                   <TableCell
+//                     sx={style.tableContent}
+//                     data-testid={`instanceId-${index}`}
+//                   >
 //                     {app.InstanceId}
 //                   </TableCell>
-//                   <TableCell sx={style.tableContent}>
+//                   <TableCell
+//                     sx={style.tableContent}
+//                     data-testid={`consumedQuantity-${index}`}
+//                   >
 //                     {app.ConsumedQuantity}
 //                   </TableCell>
-//                   <TableCell sx={style.tableContent}>{app.Cost}</TableCell>
-//                   <TableCell sx={style.tableContent}>{app.Date}</TableCell>
-//                   <TableCell sx={style.tableContent}>
+//                   <TableCell
+//                     sx={style.tableContent}
+//                     data-testid={`cost-${index}`}
+//                   >
+//                     {app.Cost}
+//                   </TableCell>
+//                   <TableCell
+//                     sx={style.tableContent}
+//                     data-testid={`date-${index}`}
+//                   >
+//                     {app.Date}
+//                   </TableCell>
+//                   <TableCell
+//                     sx={style.tableContent}
+//                     data-testid={`meterCategory-${index}`}
+//                   >
 //                     {app.MeterCategory}
 //                   </TableCell>
-//                   <TableCell sx={style.tableContent}>
+//                   <TableCell
+//                     sx={style.tableContent}
+//                     data-testid={`resourceGroup-${index}`}
+//                   >
 //                     {app.ResourceGroup}
 //                   </TableCell>
-//                   <TableCell sx={style.tableContent}>
+//                   <TableCell
+//                     sx={style.tableContent}
+//                     data-testid={`resourceLocation-${index}`}
+//                   >
 //                     {app.ResourceLocation}
 //                   </TableCell>
-//                   <TableCell sx={style.tableContent}>
+//                   <TableCell
+//                     sx={style.tableContent}
+//                     data-testid={`unitOfMeasure-${index}`}
+//                   >
 //                     {app.UnitOfMeasure}
 //                   </TableCell>
-//                   <TableCell sx={style.tableContent}>{app.Location}</TableCell>
-//                   <TableCell sx={style.tableContent}>
+//                   <TableCell
+//                     sx={style.tableContent}
+//                     data-testid={`location-${index}`}
+//                   >
+//                     {app.Location}
+//                   </TableCell>
+//                   <TableCell
+//                     sx={style.tableContent}
+//                     data-testid={`serviceName-${index}`}
+//                   >
 //                     {app.ServiceName}
 //                   </TableCell>
 //                 </TableRow>
@@ -241,6 +310,7 @@
 //           onPageChange={handleChangePage}
 //           onRowsPerPageChange={handleChangeRowsPerPage}
 //           data-testid="table-pagination"
+//           aria-label="rows per page"
 //           sx={style.pagination}
 //         />
 //       )}
@@ -248,58 +318,54 @@
 //   );
 // };
 
-// export default SelectedApplication;
+// export default Raw;
 
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Box,
-  Paper,
   Table,
   TableBody,
   TableCell,
   TableContainer,
   TableHead,
   TableRow,
+  Paper,
   Typography,
+  TextField,
+  Button,
   TablePagination,
   TableSortLabel,
-  Button,
-  TextField,
 } from "@mui/material";
-import { style } from "./SelectedApplication.css";
-import { useNavigate, useParams } from "react-router-dom";
+import { style } from "./Raw.css";
+import { useNavigate } from "react-router-dom";
 
-const SelectedApplication = () => {
-  const [selectedApplication, setSelectedApplication] = useState([]);
+const Raw = () => {
+  const [raw, setRaw] = useState([]);
   const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(15);
+  const [rowsPerPage, setRowsPerPage] = useState(30);
   const [orderBy, setOrderBy] = useState("");
   const [order, setOrder] = useState("asc");
-  const [searchText, setSearchText] = useState("");
-  const { applicationId } = useParams();
   const navigate = useNavigate();
+  const [searchText, setSearchText] = useState("");
 
   useEffect(() => {
-    const fetchApplicationDetails = async () => {
+    const fetchRawData = async () => {
       try {
         const response = await fetch(
-          `https://engineering-task.elancoapps.com/api/applications/${applicationId}`
+          "https://engineering-task.elancoapps.com/api/raw"
         );
         if (!response.ok) {
           throw new Error("Network response was not ok");
         }
         const data = await response.json();
-        setSelectedApplication(data);
+        setRaw(data);
       } catch (error) {
-        console.error(
-          "There was a problem fetching the specific application:",
-          error
-        );
+        console.error("There was a problem fetching the data:", error);
       }
     };
 
-    fetchApplicationDetails();
-  }, [applicationId]);
+    fetchRawData();
+  }, []);
 
   const handleRequestSort = (property) => {
     const isAsc = orderBy === property && order === "asc";
@@ -308,7 +374,7 @@ const SelectedApplication = () => {
   };
 
   const sortedData = orderBy
-    ? [...selectedApplication].sort((a, b) => {
+    ? [...raw].sort((a, b) => {
         const compare = (a, b) => {
           if (a < b) return -1;
           if (a > b) return 1;
@@ -321,7 +387,7 @@ const SelectedApplication = () => {
           return compare(b[orderBy], a[orderBy]);
         }
       })
-    : selectedApplication;
+    : raw;
 
   const filteredData = sortedData.filter((app) => {
     const searchTextLower = searchText.toLowerCase();
@@ -346,19 +412,20 @@ const SelectedApplication = () => {
   };
 
   const handleGoBack = () => {
-    navigate("/applications");
+    navigate("/");
   };
 
   return (
     <Box>
       <Typography variant="h3" sx={style.heading}>
-        Selected Application Details
+        All Raw Data
       </Typography>
       <TextField
         variant="outlined"
-        placeholder="Search application"
+        placeholder="Search data"
         onChange={(e) => setSearchText(e.target.value)}
         sx={style.searchField}
+        data-testid="search-field"
       />
       <Button
         variant="contained"
@@ -369,11 +436,7 @@ const SelectedApplication = () => {
         Back
       </Button>
       {filteredData.length > 0 ? (
-        <TableContainer
-          component={Paper}
-          sx={style.tableContainer}
-          data-testid="table-container"
-        >
+        <TableContainer component={Paper} sx={style.tableContainer}>
           <Table>
             <TableHead>
               <TableRow>
@@ -382,6 +445,7 @@ const SelectedApplication = () => {
                     active={orderBy === "InstanceId"}
                     direction={orderBy === "InstanceId" ? order : "asc"}
                     onClick={() => handleRequestSort("InstanceId")}
+                    data-testid="instanceId-sort-label"
                   >
                     Instance Id
                   </TableSortLabel>
@@ -391,6 +455,7 @@ const SelectedApplication = () => {
                     active={orderBy === "ConsumedQuantity"}
                     direction={orderBy === "ConsumedQuantity" ? order : "asc"}
                     onClick={() => handleRequestSort("ConsumedQuantity")}
+                    data-testid="consumedQuantity-sort-label"
                   >
                     Consumed Quantity
                   </TableSortLabel>
@@ -400,6 +465,7 @@ const SelectedApplication = () => {
                     active={orderBy === "Cost"}
                     direction={orderBy === "Cost" ? order : "asc"}
                     onClick={() => handleRequestSort("Cost")}
+                    data-testid="cost-sort-label"
                   >
                     Cost
                   </TableSortLabel>
@@ -409,6 +475,7 @@ const SelectedApplication = () => {
                     active={orderBy === "Date"}
                     direction={orderBy === "Date" ? order : "asc"}
                     onClick={() => handleRequestSort("Date")}
+                    data-testid="date-sort-label"
                   >
                     Date
                   </TableSortLabel>
@@ -418,6 +485,7 @@ const SelectedApplication = () => {
                     active={orderBy === "MeterCategory"}
                     direction={orderBy === "MeterCategory" ? order : "asc"}
                     onClick={() => handleRequestSort("MeterCategory")}
+                    data-testid="meterCategory-sort-label"
                   >
                     Meter Category
                   </TableSortLabel>
@@ -427,6 +495,7 @@ const SelectedApplication = () => {
                     active={orderBy === "ResourceGroup"}
                     direction={orderBy === "ResourceGroup" ? order : "asc"}
                     onClick={() => handleRequestSort("ResourceGroup")}
+                    data-testid="resourceGroup-sort-label"
                   >
                     Resource Group
                   </TableSortLabel>
@@ -436,6 +505,7 @@ const SelectedApplication = () => {
                     active={orderBy === "ResourceLocation"}
                     direction={orderBy === "ResourceLocation" ? order : "asc"}
                     onClick={() => handleRequestSort("ResourceLocation")}
+                    data-testid="resourceLocation-sort-label"
                   >
                     Resource Location
                   </TableSortLabel>
@@ -445,6 +515,7 @@ const SelectedApplication = () => {
                     active={orderBy === "UnitOfMeasure"}
                     direction={orderBy === "UnitOfMeasure" ? order : "asc"}
                     onClick={() => handleRequestSort("UnitOfMeasure")}
+                    data-testid="unitOfMeasure-sort-label"
                   >
                     Unit Of Measure
                   </TableSortLabel>
@@ -454,6 +525,7 @@ const SelectedApplication = () => {
                     active={orderBy === "Location"}
                     direction={orderBy === "Location" ? order : "asc"}
                     onClick={() => handleRequestSort("Location")}
+                    data-testid="location-sort-label"
                   >
                     Location
                   </TableSortLabel>
@@ -463,10 +535,11 @@ const SelectedApplication = () => {
                     active={orderBy === "ServiceName"}
                     direction={orderBy === "ServiceName" ? order : "asc"}
                     onClick={() => handleRequestSort("ServiceName")}
+                    data-testid="serviceName-sort-label"
                   >
                     Service Name
                   </TableSortLabel>
-                </TableCell>
+                </TableCell>{" "}
               </TableRow>
             </TableHead>
             <TableBody>
@@ -477,29 +550,70 @@ const SelectedApplication = () => {
                   )
                 : filteredData
               ).map((app, index) => (
-                <TableRow key={index} sx={style.tableRow}>
-                  <TableCell sx={style.tableContent}>
+                <TableRow
+                  key={index}
+                  sx={style.tableRow}
+                  data-testid={`table-row-${index}`}
+                  role={`table-row-${index}`}
+                >
+                  <TableCell
+                    sx={style.tableContent}
+                    data-testid={`instanceId-${index}`}
+                  >
                     {app.InstanceId}
                   </TableCell>
-                  <TableCell sx={style.tableContent}>
+                  <TableCell
+                    sx={style.tableContent}
+                    data-testid={`consumedQuantity-${index}`}
+                  >
                     {app.ConsumedQuantity}
                   </TableCell>
-                  <TableCell sx={style.tableContent}>{app.Cost}</TableCell>
-                  <TableCell sx={style.tableContent}>{app.Date}</TableCell>
-                  <TableCell sx={style.tableContent}>
+                  <TableCell
+                    sx={style.tableContent}
+                    data-testid={`cost-${index}`}
+                  >
+                    {app.Cost}
+                  </TableCell>
+                  <TableCell
+                    sx={style.tableContent}
+                    data-testid={`date-${index}`}
+                  >
+                    {app.Date}
+                  </TableCell>
+                  <TableCell
+                    sx={style.tableContent}
+                    data-testid={`meterCategory-${index}`}
+                  >
                     {app.MeterCategory}
                   </TableCell>
-                  <TableCell sx={style.tableContent}>
+                  <TableCell
+                    sx={style.tableContent}
+                    data-testid={`resourceGroup-${index}`}
+                  >
                     {app.ResourceGroup}
                   </TableCell>
-                  <TableCell sx={style.tableContent}>
+                  <TableCell
+                    sx={style.tableContent}
+                    data-testid={`resourceLocation-${index}`}
+                  >
                     {app.ResourceLocation}
                   </TableCell>
-                  <TableCell sx={style.tableContent}>
+                  <TableCell
+                    sx={style.tableContent}
+                    data-testid={`unitOfMeasure-${index}`}
+                  >
                     {app.UnitOfMeasure}
                   </TableCell>
-                  <TableCell sx={style.tableContent}>{app.Location}</TableCell>
-                  <TableCell sx={style.tableContent}>
+                  <TableCell
+                    sx={style.tableContent}
+                    data-testid={`location-${index}`}
+                  >
+                    {app.Location}
+                  </TableCell>
+                  <TableCell
+                    sx={style.tableContent}
+                    data-testid={`serviceName-${index}`}
+                  >
                     {app.ServiceName}
                   </TableCell>
                 </TableRow>
@@ -507,11 +621,11 @@ const SelectedApplication = () => {
             </TableBody>
           </Table>
         </TableContainer>
-        ) : (
-          <Typography variant="h5" sx={style.notFound}>
-            Data not found
-          </Typography>
-        )}
+      ) : (
+        <Typography variant="h5" sx={style.notFound}>
+          Data not found
+        </Typography>
+      )}
       {filteredData.length > 0 && (
         <TablePagination
           rowsPerPageOptions={[5, 10, 25]}
@@ -522,6 +636,7 @@ const SelectedApplication = () => {
           onPageChange={handleChangePage}
           onRowsPerPageChange={handleChangeRowsPerPage}
           data-testid="table-pagination"
+          aria-label="rows per page"
           sx={style.pagination}
         />
       )}
@@ -529,4 +644,4 @@ const SelectedApplication = () => {
   );
 };
 
-export default SelectedApplication;
+export default Raw;

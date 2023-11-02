@@ -1,7 +1,7 @@
 /* default style for component */
 export const style = {
   heading: {
-    marginTop: "25px",
+    margin: "20px 20px",
     color: "#020067",
     textDecoration: "underline",
     textAlign: "center",
@@ -24,8 +24,5 @@ export const style = {
     ml: 5,
     fontSize: "20px",
     fontWeight: 500,
-  },
-  searchField: {
-    width: "20vw",
   },
 };

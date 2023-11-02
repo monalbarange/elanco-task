@@ -31,9 +31,9 @@ const Home = () => {
         container
         rowSpacing={1}
         columnSpacing={{ xs: 1, sm: 2, md: 3 }}
-        sx={{ mt: -2 }}
+        sx={{ mt: 5, display: "flex" }} // Added flex and spacing properties
       >
-        <Grid item xs={6}>
+        <Grid item xs={4}>
           <Item sx={style.appItem}>
             <Link to="/applications" sx={style.link} style={{textDecoration: "none"}}>
               <Typography variant="h4" sx={style.headText}>
@@ -42,11 +42,20 @@ const Home = () => {
             </Link>
           </Item>
         </Grid>
-        <Grid item xs={6}>
+        <Grid item xs={4}>
           <Item sx={style.resItem}>
             <Link to="/resources" sx={style.link} style={{textDecoration: "none"}}>
               <Typography variant="h4" sx={style.headText}>
                 Resources
+              </Typography>
+            </Link>
+          </Item>
+        </Grid>
+        <Grid item xs={4}>
+          <Item sx={style.rawItem}> 
+            <Link to="/raw" sx={style.link} style={{textDecoration: "none"}}>
+              <Typography variant="h4" sx={style.headText}>
+                Raw
               </Typography>
             </Link>
           </Item>

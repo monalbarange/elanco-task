@@ -16,7 +16,7 @@ export const style = {
   },
   link: {
     textDecoration: "none",
-    alignIitems: "center",
+    alignItems: "center",
     justifyContent: "center",
     width: "100%",
     height: "100%",
@@ -24,24 +24,36 @@ export const style = {
   },
   appItem: {
     border: "2px solid orange",
-    height: "40vh",
-    width: "23vw",
-    margin: "20% 35%",
+    height: "45vh",
+    width: "25vw",
+    margin: "20% 16%",
     boxShadow: "5px 6px 10px 4px lightgrey",
     borderRadius: "40px",
-    "&: hover": {
+    "&:hover": {
       transform: "scale(1.1)",
     },
   },
   resItem: {
     border: "2px solid orange",
-    height: "40vh",
-    width: "23vw",
-    margin: "20% 14%",
+    height: "45vh",
+    width: "25vw",
+    margin: "20% 8%",
     boxShadow: "5px 6px 10px 4px lightgrey",
     borderRadius: "40px",
-    "&: hover": {
+    "&:hover": {
+      transform: "scale(1.1)",
+    },
+  },
+  rawItem: {
+    border: "2px solid orange",
+    height: "45vh",
+    width: "25vw",
+    margin: "20% 0%",
+    boxShadow: "5px 6px 10px 4px lightgrey",
+    borderRadius: "40px",
+    "&:hover": {
       transform: "scale(1.1)",
     },
   },
 };
+

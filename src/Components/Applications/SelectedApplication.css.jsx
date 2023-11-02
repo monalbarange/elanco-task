@@ -7,14 +7,22 @@ export const style = {
     textAlign: "center",
   },
 
+  searchField: {
+    width: "20vw",
+    float : "left",
+    ml: 5,
+    "& .MuiInputBase-root-MuiOutlinedInput-root": {
+      height: "3vh",
+    },
+  },
+
   resourcesName: {
     textAlign: "center",
   },
 
   tableContainer: {
-    margin: "auto",
-    width: "80%",
-    marginTop: "20px",
+    margin: "4% auto",
+    width: "95vw",
     border: "1px solid #020067",
   },
   tableCell: {
@@ -37,9 +45,10 @@ export const style = {
   },
 
   backBtn: {
-    margin: "10px 190px",
+    margin: "10px 40px",
     backgroundColor: "orange",
     width: "5vw",
+    float: "right",
     "&:hover": {
       backgroundColor: "#020067",
     },
@@ -47,5 +56,12 @@ export const style = {
 
   pagination: {
     color: "#020067",
+  },
+
+  notFound: {
+    color: "#020067",
+    textAlign: "center",
+    fontSize: "40px",
+    margin: "20% 20%"
   },
 };
